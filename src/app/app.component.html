@@ -1,0 +1,31 @@
+<div class="container">
+	<h1>
+		Welcome {{title}}!
+	</h1>
+	<div class="container">
+		hai
+		hai
+		<p>User Id: <span>{{player.id}}</span></p>
+		<p>User mail: <span>{{player.email}}</span></p>
+
+		<p>message: <span>{{message}}</span></p>
+		<p>Winner: <span>{{winner.username}}</span></p>
+		<button (click)="doSurrender()">surrender</button>
+		<button (click)="doNewGame()">start new game</button>
+		<table style="border: 1px solid yellowgreen">
+			<thead>
+			<tr>
+				<th><button (click)="doMove(1)">1</button></th>
+				<th><button (click)="doMove(2)">1</button></th>
+				<th><button (click)="doMove(3)">1</button></th>
+				<th><button (click)="doMove(4)">1</button></th>
+				<th><button (click)="doMove(5)">1</button></th>
+				<th><button (click)="doMove(6)">1</button></th>
+			</tr>
+			</thead>
+			<tr *ngFor="let row of fieldState; let i = index">
+				<td style="width:20px; height: 20px" *ngFor="let col of row; let i = index">{{col}}</td>
+			</tr>
+		</table>
+	</div>
+</div>
