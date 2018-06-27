@@ -143,30 +143,8 @@ public class PlayingField {
 			}
 			row++;
 		}
-		// go through columns
-		// check columns row n
 
 
-		//check horizontal
-//		int rowPointer=0;
-//		for (int i = 0; i < playerCount; i++) {
-//			consecutivePlaces[i]=0;
-//		}
-//		while(rowPointer<places.size()) {
-//			for (ArrayList<Integer> l :
-//					places) {
-//				if(l.get(rowPointer)==1)
-//					consecutiveCountPlayerOne++;
-//				else if(l.get(rowPointer)==2)
-//					consecutiveCountPlayerTwo++;
-//			}
-//
-//			int i = checkForWinningPlayer(consecutivePlaces);
-//			if (i>0) return i;
-//
-//			rowPointer++;
-//		}
-//
 //		//check diagonal
 //		int startPoint=0;
 //		Boolean directionInverse=false;
