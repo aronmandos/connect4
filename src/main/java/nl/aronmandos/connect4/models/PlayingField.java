@@ -1,12 +1,9 @@
 package nl.aronmandos.connect4.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import org.slf4j.LoggerFactory;
+
+import javax.persistence.*;
 import java.util.ArrayList;
-
-
 
 
 @Entity
@@ -19,7 +16,10 @@ public class PlayingField {
 	//@Type(type="BINARY")
 	//@Size(min=4096, max=8192)
 	@Lob
-	private ArrayList<ArrayList<Integer>> places = new ArrayList<>();;
+	private ArrayList<ArrayList<Integer>> places = new ArrayList<>();
+
+	@Transient
+	private final org.slf4j.Logger log = LoggerFactory.getLogger(this.getClass());
 	private int height,width,playerCount;
 
 	private static final int defaultGridsize = 6;
@@ -87,8 +87,7 @@ public class PlayingField {
 			int consecutiveStringStartedForIndex=0;
 			for (int gridRowCell :
 					gridCol) {
-				// if place is filled with a move and the move belongs to player of previous loop iteration, the add one to the string of consecutive places
-				// if place is filled with a move and the move belongs to player of previous loop iteration, the add one to the string of consecutive places
+				// if place is filled with a move and the move belongs to player of previous loop iteration, the add one to the string of consecutive place
 				if(gridRowCell >0 && (gridRowCell==consecutiveStringStartedForIndex||consecutiveStringStartedForIndex==0)) {
 					consecutivePlaces[gridRowCell - 1]++;
 					if(gridRowCell==0) consecutiveStringStartedForIndex=gridRowCell;
@@ -144,40 +143,44 @@ public class PlayingField {
 			row++;
 		}
 
+		//check diagonal
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				int val = places.get(i).get(j);
+				if(val==0){
+					continue;
+				}
+				if(val>0){
+					int stringLength = 1;
+					int shiftCount=0;
+					while(stringLength>0){
+//						if(i+1+shiftCount>=width || j+1+shiftCount>=height || j-1-shiftCount<0){
+//							stringLength=0;
+//							shiftCount=0;
+//							continue;
+//						}
+						if(i+1+shiftCount<width&&j+1+shiftCount<height && places.get(i+1+shiftCount).get(j+1+shiftCount)==val){
+							stringLength++;
+							shiftCount++;
+						}else if(i+1+shiftCount<width&&j-1-shiftCount>0 && places.get(i+1+shiftCount).get(j-1-shiftCount)==val){
+							stringLength++;
+							shiftCount++;
+						}else{
+							stringLength=0;
+							shiftCount=0;
+							continue;
+						}
+						if(stringLength>3){
+							return val;
+						}
 
-//		//check diagonal
-//		int startPoint=0;
-//		Boolean directionInverse=false;
-//		for (int i = 0; i < playerCount; i++) {
-//			consecutivePlaces[i]=0;
-//		}
-//
-//		while(startPoint<places.size()) {
-//			for (int i = 0; i < places.size(); i++) {
-//				ArrayList<Integer> l = places.get(i);
-//				int rowIndex = startPoint-i;
-//
-//				if(rowIndex>=0 && rowIndex<l.size()) {
-//					if (l.get(rowIndex) == 1)
-//						consecutiveCountPlayerOne++;
-//					else if (l.get(rowIndex) == 2)
-//						consecutiveCountPlayerTwo++;
-//				}
-//			}
-//
-//			if(consecutiveCountPlayerOne>=4)
-//				return 1;
-//			else if(consecutiveCountPlayerTwo>=4)
-//				return 2;
-//
-//			consecutiveCountPlayerOne=0;
-//			consecutiveCountPlayerTwo=0;
-//			startPoint++;
-//		}
-		//TODO check for winstate
-		//TODO return winner
+					}
+				}
+			}
+		}
 		return 0;
 	}
+
 
 	private Integer checkForWinningPlayer(int[] consecutivePlaces) {
 		for (int i = 0; i < consecutivePlaces.length; i++) {
