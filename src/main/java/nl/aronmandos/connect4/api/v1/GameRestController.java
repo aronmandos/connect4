@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Random;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/games")
 public class GameRestController {
