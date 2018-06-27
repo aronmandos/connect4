@@ -10,11 +10,8 @@ import nl.aronmandos.connect4.repositories.PlayingFieldRespository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Random;
@@ -62,12 +59,9 @@ public class GameRestController {
 		
 
 		int playerNumber = game.getPlayerOnTurn();
-		int opponentNumber = 0;
-		if (playerNumber == 1) {
-			opponentNumber = 2;
-		} else if (playerNumber == 2) {
-			opponentNumber = 1;
-		}
+		//this needs more graceful code when >2 player support is in
+		int opponentNumber = (playerNumber==1)?2:1;
+
 		
 		if (game.getPlayerOnTurn() != playerNumber) {
 			throw new PlayerNotOnTurnException(gameId, playerNumber);
@@ -78,7 +72,8 @@ public class GameRestController {
 		if (game.getWinner()!= null && game.getWinner().getClass() == Player.class) {
 			throw new GameIsWonException(gameId, playerNumber);
 		}
-		field.doMove(column-1, playerNumber);
+		field.doMove(column, playerNumber);
+
 		game.setPlayerOnTurn(opponentNumber);
 		
 		
@@ -108,7 +103,7 @@ public class GameRestController {
 		
 		Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameNotFoundException(gameId));
 		
-		Player current = this.playerRepository.findById((long) 1).orElseThrow(() -> new GameNotFoundException((long) 1));
+		Player current = this.playerRepository.findById((long)game.getPlayerOnTurn()).orElseThrow(() -> new GameNotFoundException((long) gameId));
 		Player opponent;
 		if (game.getChallenger() == current) {
 			opponent = game.getOpponent();
@@ -126,11 +121,11 @@ public class GameRestController {
 	
 	@PostMapping("/newgame/{challengerId}/{opponentId}")
 	Game startNewGame(@PathVariable Long challengerId, @PathVariable Long opponentId) {
-		Player challenger = this.playerRepository.findById((long) 1).orElseThrow(() -> new PlayerNotFoundException(challengerId));
-		Player opponent= this.playerRepository.findById((long) 1).orElseThrow(() -> new PlayerNotFoundException(opponentId));
+		Player challenger = this.playerRepository.findById(challengerId).orElseThrow(() -> new PlayerNotFoundException(challengerId));
+		Player opponent= this.playerRepository.findById(opponentId).orElseThrow(() -> new PlayerNotFoundException(opponentId));
 		
-		PlayingField field = new PlayingField(6, 6);
-		int firstPlayer = new Random().nextInt(2)+1;
+		PlayingField field = new PlayingField();
+		int firstPlayer = new Random().nextInt(field.getPlayerCount());
 		fieldRespository.save(field);
 		Game game = new Game(challenger, opponent, field, firstPlayer, new Date(), new Date(), null, null);
 		gameRepository.save(game);

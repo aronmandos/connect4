@@ -1,7 +1,5 @@
 package nl.aronmandos.connect4;
 
-import nl.aronmandos.connect4.api.v1.GameRestController;
-import nl.aronmandos.connect4.api.v1.PlayerRestController;
 import nl.aronmandos.connect4.models.Game;
 import nl.aronmandos.connect4.models.Player;
 import nl.aronmandos.connect4.models.PlayingField;
@@ -13,7 +11,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
