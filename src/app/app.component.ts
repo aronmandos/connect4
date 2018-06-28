@@ -13,7 +13,7 @@ import {PlayingField} from "./shared/models/playingField.model";
     styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-    title = 'Testing';
+    title = 'Welkom op de Connect4 server!';
 	players: PlayerApiCollection;
 	player: Player;
 	games:GameApiCollection;
