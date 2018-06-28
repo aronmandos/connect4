@@ -39,7 +39,6 @@ public class PlayerRestController {
 	
 	@PostMapping
 	ResponseEntity<?> add(@RequestBody Player player) {
-		//TODO maybe a safer way to transfer personal data?
 		Player result = playerRepository.save(player);
 		
 		URI location = ServletUriComponentsBuilder
@@ -54,7 +53,7 @@ public class PlayerRestController {
 	}
 	
 	@PostMapping("/{playerId}/invite")
-	void invitePlayerForGame(@PathVariable Long playerId) { //TODO return
+	void invitePlayerForGame(@PathVariable Long playerId) {
 		//TODO get current user
 		//TODO set current user as challenger
 		Player challenger = this.playerRepository.findById((long) 1).orElseThrow(() -> new PlayerNotFoundException(playerId));
@@ -74,9 +73,7 @@ public class PlayerRestController {
 	}
 	
 	@PostMapping("/{playerId}/friends/{friendId}")
-	void addFriend(@PathVariable Long playerId, @PathVariable Long friendId) { //TODO return
-		//TODO get current user
-		//TODO set current user as challenger
+	void addFriend(@PathVariable Long playerId, @PathVariable Long friendId) {
 		Player current = this.playerRepository.findById(playerId).orElseThrow(() -> new PlayerNotFoundException(playerId));
 		Player friend = this.playerRepository.findById(friendId).orElseThrow(() -> new PlayerNotFoundException(playerId));
 		current.addFriend(friend);
@@ -88,7 +85,7 @@ public class PlayerRestController {
 	@GetMapping("/{playerId}/games")
 	Collection<Game> readPlayerActiveGames(@PathVariable Long playerId) {
 		Player player = this.playerRepository.findById(playerId).orElseThrow(() -> new PlayerNotFoundException(playerId));
-		return this.gameRepository.findActiveByPlayer(player);//TODO test whether object ref works
+		return this.gameRepository.findByPlayer(player);
 		
 	}
 }

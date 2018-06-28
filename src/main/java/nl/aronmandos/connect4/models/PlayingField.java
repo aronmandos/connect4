@@ -64,7 +64,7 @@ public class PlayingField {
 		if (column > width && column>=0) {
 			return false;
 		}
-		if (column > this.height) {
+		if (places.get(column).lastIndexOf(0) == -1) {
 			return false;
 		}
 		if (player > playerCount) {
@@ -74,27 +74,25 @@ public class PlayingField {
 	}
 	
 	public void doMove(int column, int player) {
-		places.get(column).set(places.get(column).lastIndexOf((Integer)0), player);
+		places.get(column).set(places.get(column).lastIndexOf(0), player);
 	}
 	
 	public int checkForVictory() {
 
 
 		// check verticals
-		for (ArrayList<Integer> gridCol :
-				places) {
+		for (ArrayList<Integer> gridCol : places) {
 			int[] consecutivePlaces = new int[playerCount];
 			int consecutiveStringStartedForIndex=0;
-			for (int gridRowCell :
-					gridCol) {
+			for (int gridRowCell : gridCol) {
 				// if place is filled with a move and the move belongs to player of previous loop iteration, the add one to the string of consecutive place
 				if(gridRowCell >0 && (gridRowCell==consecutiveStringStartedForIndex||consecutiveStringStartedForIndex==0)) {
 					consecutivePlaces[gridRowCell - 1]++;
-					if(gridRowCell==0) consecutiveStringStartedForIndex=gridRowCell;
+					/*if(gridRowCell==0) consecutiveStringStartedForIndex=gridRowCell;*/
 				}else{
 					//string interrupted, reset back to 0 or the found player
 					// set string of player checking to 0
-					if(gridRowCell>0) consecutivePlaces[consecutiveStringStartedForIndex]=0;
+					consecutivePlaces[consecutiveStringStartedForIndex]=0;
 					// set player checking to newfound player (or 0)
 					consecutiveStringStartedForIndex=gridRowCell;
 					// set string for new found player to 1
@@ -118,18 +116,16 @@ public class PlayingField {
 			int consecutiveStringStartedForIndex=0;
 
 			// go through columns
-			for (ArrayList<Integer> gridCol :
-					places) {
+			for (ArrayList<Integer> gridCol : places) {
 
 					int gridRowCell = gridCol.get(row);
 					// if place is filled with a move and the move belongs to player of previous loop iteration, the add one to the string of consecutive places
 					if(gridRowCell >0 && (gridRowCell==consecutiveStringStartedForIndex||consecutiveStringStartedForIndex==0)) {
 						consecutivePlaces[gridRowCell - 1]++;
-						if(gridRowCell==0) consecutiveStringStartedForIndex=gridRowCell;
 					}else{
 						//string interrupted, reset back to 0 or the found player
 						// set string of player checking to 0
-						if(gridRowCell>0) consecutivePlaces[consecutiveStringStartedForIndex]=0;
+						consecutivePlaces[consecutiveStringStartedForIndex]=0;
 						// set player checking to newfound player (or 0)
 						consecutiveStringStartedForIndex=gridRowCell;
 						// set string for new found player to 1
@@ -154,11 +150,6 @@ public class PlayingField {
 					int stringLength = 1;
 					int shiftCount=0;
 					while(stringLength>0){
-//						if(i+1+shiftCount>=width || j+1+shiftCount>=height || j-1-shiftCount<0){
-//							stringLength=0;
-//							shiftCount=0;
-//							continue;
-//						}
 						if(i+1+shiftCount<width&&j+1+shiftCount<height && places.get(i+1+shiftCount).get(j+1+shiftCount)==val){
 							stringLength++;
 							shiftCount++;

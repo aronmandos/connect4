@@ -104,7 +104,9 @@ export class AppComponent {
 	}
 	
 	public doMove(col:number) {
-		var post =this.http.post('games/move/'+this.game.id+'/'+col, col);
+		var post =this.http.post('games/move/'+this.game.id+'/'+col, {
+		
+		});
 		post.subscribe(data => {
 			let game:Game = new Game().deserialize(data);
 			

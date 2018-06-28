@@ -85,9 +85,11 @@ public class GameRestController {
 		} else if (winnerNumber == 2) {
 			winner = game.getOpponent();
 		}
-		game.setWinner(winner);
+		
 		
 		if (winner != null) {
+			game.setWinner(winner);
+			game.setEndDate(new Date());
 			game.setPlayerOnTurn(0);
 		} else if (playerNumber == 1) {
 			game.setPlayerOnTurn(2);
@@ -99,12 +101,12 @@ public class GameRestController {
 		return game;
 	}
 	
-	@PostMapping("/surrender/{gameId}")
-	Game surrender(@PathVariable Long gameId) {
+	@PostMapping("/surrender/{gameId}/{surrenderingPlayerId}")
+	Game surrender(@PathVariable Long gameId, @PathVariable Long surrenderingPlayerId) {
 		
 		Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameNotFoundException(gameId));
 		
-		Player current = this.playerRepository.findById((long)game.getPlayerOnTurn()).orElseThrow(() -> new GameNotFoundException((long) gameId));
+		Player current = this.playerRepository.findById(surrenderingPlayerId).orElseThrow(() -> new GameNotFoundException((long) gameId));
 		Player opponent;
 		if (game.getChallenger() == current) {
 			opponent = game.getOpponent();
